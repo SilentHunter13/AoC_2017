@@ -14,6 +14,19 @@ def min_max_diff(line):
           min = number
     return (max - min)
 
+def divide(line):
+
+    str_numbers = line.split()
+
+    for str_number1 in str_numbers:
+        number1 = int(str_number1)
+        for str_number2 in str_numbers:
+          number2 = int(str_number2)
+          if number1 != number2:
+
+            if (number1 % number2) == 0:
+              return number1 // number2
+
 def Day2(line_value_get):
 
     checksum = 0
@@ -27,3 +40,4 @@ def Day2(line_value_get):
     return checksum
 
 print(Day2(min_max_diff))
+print(Day2(divide))
