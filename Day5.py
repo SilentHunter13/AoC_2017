@@ -4,9 +4,18 @@ import numpy as np
 
 MATRIX_SIZE = 1052
 
-def inc_offset(index):
+def inc_offset(offset):
 
-    return index + 1
+    return offset + 1
+
+def up_down(offset):
+
+    if offset >= 3:
+        new_offset = offset - 1
+    else:
+        new_offset = offset + 1
+
+    return new_offset
 
 def Day5(calc_offset):
 
@@ -31,3 +40,4 @@ def Day5(calc_offset):
     return step
 
 print(Day5(inc_offset))
+print(Day5(up_down))
