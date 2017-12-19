@@ -48,6 +48,28 @@ def get_root(progs):
         if prog['parent'] == None:
             return prog
 
+def sum_weight(prog):
+
+    weight = prog['weight']
+    for child in prog['childs']:
+        weight += sum_weight(child)
+
+    prog['weight_sum'] = weight
+
+    return weight
+
+def find_imbalance(progs):
+
+    for prog in progs:
+
+        for child1 in prog['childs']:
+            if child1['weight_sum'] != prog['childs'][0]['weight_sum']:
+
+                weight1 = child1['weight_sum']
+                weight2 = prog['childs'][0]['weight_sum']
+                imbalance = max(weight1, weight2) - min(weight1, weight2)
+
+                return imbalance
 
 def day7():
 
@@ -61,6 +83,10 @@ def day7():
 
     root = get_root(progs)
 
-    return root['name']
+    sum_weight(root)
+
+    imbalance = find_imbalance(progs)
+
+    return (root['name'], imbalance)
 
 print(day7())
