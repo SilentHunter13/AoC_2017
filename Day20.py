@@ -2,6 +2,8 @@
 
 import re
 import numpy as np
+import itertools
+import time
 
 DIMENSIONS = 3
 
@@ -9,6 +11,7 @@ class Point:
 
     def __init__(self, line):
 
+        self.collides = False
         self._position = np.zeros(DIMENSIONS)
         self._velocity = np.zeros(DIMENSIONS)
         self._acceleration = np.zeros(DIMENSIONS)
@@ -48,9 +51,23 @@ class Point:
 
         return distance
 
+    def collide(self, other):
 
+        if self is not other:
+            if (self._position == other._position).all():
+                self.collides = True
+                other.collides = True
 
-def day20():
+def remove_collisions(points):
+
+    for point1, point2 in itertools.combinations(points, 2):
+        point1.collide(point2)
+
+    for point in points:
+        if point.collides:
+            points.remove(point)
+
+def day20(remove, stay_target):
 
     points = list()
 
@@ -62,21 +79,36 @@ def day20():
 
     stay_counter = 0
     old_nearest = None
+    old_len = 0
 
-    while stay_counter < 1000:
+    while stay_counter < stay_target:
         for point in points:
             point.step()
 
-        nearest = min(points, key=lambda x: x.get_distance())
+        if remove:
+            remove_collisions(points)
 
-        if old_nearest == nearest:
-            stay_counter += 1
+            if len(points) == old_len:
+                stay_counter += 1
+            else:
+                stay_counter = 0
+
+            old_len = len(points)
+
         else:
-            stay_counter = 0
+            nearest = min(points, key=lambda p: p.get_distance())
 
-        old_nearest = nearest
+            if old_nearest == nearest:
+                stay_counter += 1
+            else:
+                stay_counter = 0
 
+                old_nearest = nearest
 
-    return points.index(nearest)
+    if remove:
+        return len(points)
+    else:
+        return points.index(nearest)
 
-print(day20())
+print(day20(False, 200))
+print(day20(True, 10))
