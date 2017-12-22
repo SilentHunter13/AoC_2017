@@ -1,59 +1,57 @@
 #!/usr/bin/env python3
 
 import numpy as np
+import time
 
 GRID_SIZE = 1001
+HALF_GRID_SIZE = GRID_SIZE // 2
 
 def set_index(matrix, point, value):
 
-    matrix[(GRID_SIZE // 2) - point[1,0], (GRID_SIZE // 2) + point[0,0]] = value
+    matrix[HALF_GRID_SIZE - point[1,0], HALF_GRID_SIZE + point[0,0]] = value
 
 def get_index(matrix, point):
 
-    return matrix[(GRID_SIZE // 2) - point[1,0], (GRID_SIZE // 2) + point[0,0]]
+    return matrix[HALF_GRID_SIZE - point[1,0], HALF_GRID_SIZE + point[0,0]]
 
 class Carrier:
 
     def __init__(self):
+
         self.direction = np.array([(0),(1)], dtype = int).reshape(2,1)
 
         self.position = np.array([(0),(0)], dtype = int).reshape(2,1)
         self.infects = 0
 
-    def calc_direction(self, infection):
+        # clean = 0, infected = 1, weakend = -1, flagged = 0.5
+        self.action = {1:0.5, -1:1, 0:-1, 0.5:0}
 
-        if infection == 1:
-            #rechts
-            turn = np.array([[0, 1], [-1, 0]])
-        else:
-            #links
-            turn = np.array([[0, -1], [1, 0]])
+        self.turn = dict()
+        self.turn[1] = np.array([[0, 1], [-1, 0]])
+        self.turn[0] = np.array([[0, -1], [1, 0]])
+        self.turn[-1] = np.array([[1, 0], [0, 1]])
+        self.turn[0.5] = np.array([[-1, 0], [0, -1]])
 
-        self.direction = np.dot(turn, self.direction)
+    def calc_direction(self, status):
 
-    def infect(self, infection):
+        self.direction = np.dot(self.turn[status], self.direction)
 
-        if infection == 1:
-            infection = 0
-        else:
-            infection = 1
+    def infect(self, status):
+
+        if status == -1:
             self.infects += 1
 
-        return infection
+        return self.action[status]
 
     def burst(self, grid):
 
         infection = get_index(grid,self.position)
-        #print(self.position)
-        #print(infection)
 
         self.calc_direction(infection)
-        #print(self.direction)
 
         set_index(grid, self.position, self.infect(infection))
 
         self.position = self.position + self.direction
-        #print(self.position)
 
 def decode_line(line):
     line = line.strip()
@@ -78,9 +76,13 @@ def day22():
             grid[insert_index + index:insert_index + index + 1,insert_index:insert_index + input_length] = decode_line(line)
 
     carrier = Carrier()
-    for i in range(10000):
-        #print(grid[496:505,496:505])
+
+    start =  time.clock()
+    for i in range(10000000):
         carrier.burst(grid)
+
+    stop =  time.clock()
+    print(stop - start)
 
     return carrier.infects
 
