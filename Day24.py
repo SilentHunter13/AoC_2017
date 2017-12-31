@@ -36,20 +36,14 @@ def create_bridges(elements):
         bridge.append(element)
         bridges.append(bridge)
 
+    #Brücken bauen
     for bridge in bridges:
         free_port = get_free_port(bridge)
-        #copy = False
         for match in get_matching(elements, free_port):
-            #print(bridges)
             if match not in bridge:
-                #if copy:
                 newbridge = list(bridge)
                 newbridge.append(match)
                 bridges.append(newbridge)
-                #else:
-                #   bridge.append(match)
-                #   copy = True
-
 
     return bridges
 
@@ -65,7 +59,11 @@ def day24():
 
     bridges = create_bridges(elements)
     
-    return get_strength(max(bridges, key=get_strength))
+    longest_length = len(max(bridges, key=len))
+    
+    longest_bridges = [e for e in bridges if len(e) == longest_length]
+    
+    return (get_strength(max(bridges, key=get_strength)), get_strength(max(longest_bridges, key=get_strength)))
 
 
 print(day24())
