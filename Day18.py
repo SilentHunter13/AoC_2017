@@ -70,8 +70,6 @@ class Cpu:
         elif waiting:
             ret = 1
 
-        print(self.cpu_id, self.pc, waiting, self.registers)
-
         return (ret, self.send_count)
 
 def run(instructions):
@@ -85,15 +83,15 @@ def run(instructions):
     ret1 = 0
     ret2 = 0
     count = 0
-    while ((ret1 < 1) or (ret2 < 1)) and (count < 0):
+    while ((ret1 < 1) or (ret2 < 1)):
         if ret1 < 2:
-            (ret1, send_count1) = cpu1.execute()
+            (ret1, _) = cpu1.execute()
         if ret2 < 2:
-            (ret2, _) = cpu2.execute()
+            (ret2, send_count2) = cpu2.execute()
 
         count += 1
 
-    return send_count1
+    return send_count2
 
 
 def read_inst(line):
