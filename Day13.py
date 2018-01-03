@@ -16,6 +16,18 @@ def calc_severity(scanners):
     
     return severity
     
+def calc_delay(scanners):
+    
+    for delay in range(10000000):
+        caught = False
+        for scanner in scanners:
+            if got_caught(delay + scanner['depth'], scanner['range']):
+                caught = True
+                break
+        
+        if not caught:
+            return delay
+    
 def day13():
 
     scanners = list()
@@ -29,6 +41,6 @@ def day13():
             scanner = {'depth': int(parts[0]), 'range': int(parts[1])}
             scanners.append(scanner)
                 
-    return calc_severity(scanners)
+    return (calc_severity(scanners), calc_delay(scanners))
             
 print(day13())
