@@ -20,17 +20,17 @@ def go_direction(position, direction):
 
 def calc_shortest_distance(position):
 
-    steps = 0
     #es ist nur die Lösung für einen Quadranten nötig
     #Lösung für Quadrant 1 (x und y positiv)
     position = (abs(position[0]), abs(position[1]))
 
-    while position != (0, 0):
-        #sinnvollsten Schritt bestimmen
-        new_positions = [go_direction(position, x) for x in ['s', 'sw', 'nw']]
-
-        position = min(new_positions, key=lambda x: x[0]**2 + x[1]**2)
-        steps += 1
+    #x Wert kleiner gleich zweifacher y Wert
+    if position[0] <= (position[1] * 2):
+        steps = position[0] // 2
+        steps += (position[1] - steps) // 2
+    else:
+        steps = position[1]
+        steps += (position[0] - (steps * 2)) // 2
 
     return steps
 
