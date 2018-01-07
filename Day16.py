@@ -6,7 +6,7 @@ SPIN = 0
 EXCHANGE = 1
 PARTNER = 2
 
-LINE_WIDTH = 5
+LINE_WIDTH = 16
 
 def bits(num):
 
@@ -80,12 +80,13 @@ def dance_p(dance_line, template):
 
 def day16(dance_count):
 
-    dancer = Dancer('./Input/Day16_t1.txt')
+    dancer = Dancer('./Input/Day16.txt')
 
     return dancer.dance(dance_count)
 
 
-print(day16(3))
+print(day16(1))
+print(day16(1000000000))
 #cProfile.run('day16(2)')
 #print(day16(2))
 #print(day16(3))
