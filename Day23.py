@@ -2,6 +2,7 @@
 
 import re
 import collections
+import math
 
 class Cpu:
 
@@ -47,16 +48,11 @@ class Cpu:
         if incpc:
             self.pc += 1
 
-        #if(self.registers['d']) == 3:
-        print(self.pc, self.registers)
-        #    exit()
-
     def run(self):
         while self.pc < len(self.instructions):
             self.execute()
-            #print(self.pc)
 
-        return (self.mul_count, self.registers['h'])
+        return self.mul_count
 
 
 def read_inst(line):
@@ -82,14 +78,29 @@ def day23():
 
     instructions = list()
 
-    with open('./Input/Day23_s.txt', 'r') as file:
+    with open('./Input/Day23.txt', 'r') as file:
 
         for line in file.readlines():
             instructions.append(read_inst(line))
 
-    cpu = Cpu(instructions, 1)
-
+    cpu = Cpu(instructions, 0)
 
     return cpu.run()
 
-print(day23())
+def day23_opt():
+    h = 0
+    for i in range(108400, 125402, 17):
+        f = 2
+        divisible = False
+        while f < math.sqrt(i):
+            if (i % f) == 0:
+                divisible = True
+                break
+            f += 1
+
+        if divisible:
+            h += 1
+
+    return h
+
+print(day23(), day23_opt())
